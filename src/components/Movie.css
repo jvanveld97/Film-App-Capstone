@@ -1,0 +1,26 @@
+.search-film-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.filtered-film-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.film-image{
+    display: flex;
+}
+
+.film-title{
+    display: flex;
+    
+}
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
