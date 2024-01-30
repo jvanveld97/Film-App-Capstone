@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { SearchBar } from "./SearchBar"
-import "./Movie.css"
+import "./FilmList.css"
+import { Link } from "react-router-dom"
 
 function Movie() {
   const [filmList, setFilmList] = useState([])
@@ -17,9 +18,9 @@ function Movie() {
 
   const getFilm = () => {
     // let totalFilms = [] make it so multiple fetches grab 3 as much movies per page.
-    const random = Math.floor(Math.random() * 500)
+    const random = Math.floor(Math.random() * 200)
     fetch(
-      `https://api.themoviedb.org/3/discover/movie?${apiKey}&page=${random}&include_adult=false`
+      `https://api.themoviedb.org/3/discover/movie?api_key=5fdee37d435b4908168dfca5173bb7b1&certification=18A&certification_country=US&page=${random}`
     )
       .then((res) => res.json())
       .then((json) => setFilmList(json.results))
@@ -32,6 +33,7 @@ function Movie() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     getFilm()
     getGenre()
   }, [])
@@ -57,7 +59,7 @@ function Movie() {
 
   return (
     <div>
-      <div>
+      <div className="search-filter-component">
         <label style={{ margin: "10px" }}>Filter by Genre</label>
         <select name="filter" value={filter} onChange={handleChangeFilter}>
           <option value="">--All--</option>
@@ -91,7 +93,9 @@ function Movie() {
                   src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                   alt="Film Poster"
                 />
-                <label className="film-title">{film.title}</label>
+                <Link to={`film-details/${film.id}`}>
+                  <label className="film-title">{film.title}</label>
+                </Link>
               </div>
             ))
           : filteredFilms?.map((film) => (
@@ -106,7 +110,9 @@ function Movie() {
                   src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                   alt="Film Poster"
                 />
-                <h2 className="film-title">{film.title}</h2>
+                <Link to={`film-details/${film.id}`}>
+                  <h2 className="film-title">{film.title}</h2>
+                </Link>
                 <label>Release Date {film.release_date}</label>
                 <label>Review Average {film.vote_average}</label>
                 <label>

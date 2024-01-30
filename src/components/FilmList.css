@@ -24,3 +24,8 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
+.search-filter-component{
+    display: flex;
+    margin: 10px;
+    justify-content: space-evenly;
+}
