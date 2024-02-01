@@ -28,3 +28,7 @@
   .film-genres span {
     margin: 0 5px;
   }
+  .buttons-group {
+    display: flex;
+    margin: 10px ;
+  }

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react"
 import { SearchBar } from "./SearchBar"
 import "./FilmList.css"
 import { Link } from "react-router-dom"
+import { handleWatchlist } from "./watchList/handleWatchlist"
 
-function Movie() {
+function Movie({ currentUser }) {
   const [filmList, setFilmList] = useState([])
   const [genreList, setGenreList] = useState([])
   const [filter, setFilter] = useState("")
@@ -115,10 +116,13 @@ function Movie() {
                 </Link>
                 <label>Release Date {film.release_date}</label>
                 <label>Review Average {film.vote_average}</label>
-                <label>
-                  Add to my Watchlist
-                  <input type="checkbox" />
-                </label>
+                <button
+                  onClick={() => {
+                    handleWatchlist(film, currentUser)
+                  }}
+                >
+                  Add to Watch List
+                </button>
               </div>
             ))}
       </div>
