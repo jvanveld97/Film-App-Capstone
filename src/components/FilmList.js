@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { SearchBar } from "./SearchBar"
 import "./FilmList.css"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { handleWatchlist } from "./watchList/handleWatchlist"
 
 function Movie({ currentUser }) {
@@ -10,6 +10,7 @@ function Movie({ currentUser }) {
   const [filter, setFilter] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [searchResults, setSearchResults] = useState([])
+  const location = useLocation()
 
   const apiKey = `api_key=5fdee37d435b4908168dfca5173bb7b1`
 
@@ -21,7 +22,7 @@ function Movie({ currentUser }) {
     // let totalFilms = [] make it so multiple fetches grab 3 as much movies per page.
     const random = Math.floor(Math.random() * 200)
     fetch(
-      `https://api.themoviedb.org/3/discover/movie?api_key=5fdee37d435b4908168dfca5173bb7b1&certification=18A&certification_country=US&page=${random}`
+      `https://api.themoviedb.org/3/discover/movie?api_key=5fdee37d435b4908168dfca5173bb7b1&certification=R&certification_country=US&page=${random}`
     )
       .then((res) => res.json())
       .then((json) => setFilmList(json.results))
@@ -118,7 +119,7 @@ function Movie({ currentUser }) {
                 <label>Review Average {film.vote_average}</label>
                 <button
                   onClick={() => {
-                    handleWatchlist(film, currentUser)
+                    handleWatchlist(film, currentUser, "list")
                   }}
                 >
                   Add to Watch List

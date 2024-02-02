@@ -1,0 +1,8 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+}
+.register-link {
+    display: flex;
+    justify-content: center;
+}

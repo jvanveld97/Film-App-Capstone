@@ -56,8 +56,8 @@ export const Register = (props) => {
           <div>
             <input
               onChange={updateUser}
-              type="text"
-              id="name"
+              type="username"
+              id="username"
               className="auth-form-input"
               placeholder="Enter your username"
               required
