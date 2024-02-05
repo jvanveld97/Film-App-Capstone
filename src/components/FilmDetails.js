@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import { getFilmById, getVideosByFilmId } from "./services/getFilms"
+import { useLocation, useParams } from "react-router-dom"
+import {
+  addNewFilmToRecommendations,
+  getFilmById,
+  getVideosByFilmId,
+} from "./services/getFilms"
 import "./FilmDetails.css"
 import ReactPlayer from "react-player"
+import { handleWatchlist } from "./watchList/handleWatchlist"
 
 export const FilmDetails = ({ currentUser }) => {
   const [film, setFilm] = useState({})
   const [filmVideos, setFilmVideos] = useState([])
   const { filmId } = useParams()
+  const location = useLocation()
 
   useEffect(() => {
     getFilmById(filmId).then((selectedFilm) => {
@@ -21,6 +27,16 @@ export const FilmDetails = ({ currentUser }) => {
   const trailerVideo = filmVideos?.find(
     (videoObj) => videoObj.type === "Trailer" || videoObj.type === "Teaser"
   )
+
+  const handleRecommendations = (film, currentUser) => {
+    const newFilmRecommendationObj = {
+      userId: currentUser.id,
+      isReviewed: false,
+      ...film,
+    }
+    addNewFilmToRecommendations(newFilmRecommendationObj)
+  }
+
   return (
     <section className="film-container">
       <img
@@ -36,8 +52,20 @@ export const FilmDetails = ({ currentUser }) => {
       />
       <h1 className="film-title">{film.title}</h1>
       <div className="buttons-group">
-        <button>Add to Watchlist</button>
-        <button>Add to Recommendations</button>
+        <button
+          onClick={() => {
+            handleWatchlist(film, currentUser, "details")
+          }}
+        >
+          Add to Watchlist
+        </button>
+        <button
+          onClick={() => {
+            handleRecommendations(film, currentUser)
+          }}
+        >
+          Add to Recommendations
+        </button>
         <button>Review</button>
       </div>
       <div className="film-genres">

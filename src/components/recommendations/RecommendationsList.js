@@ -1,36 +1,36 @@
 import { useEffect, useState } from "react"
 import {
-  getWatchlistFilmsByUserId,
-  removeWatchlistFilm,
+  getRecommendedFilmsByUserId,
+  removeRecommendationFilm,
 } from "../services/getFilms"
 import { Button, Card, CardBody, CardTitle } from "reactstrap"
 import { Link } from "react-router-dom"
 
-export const WatchList = ({ currentUser }) => {
-  const [myWatchlistFilms, setMyWatchlistFilms] = useState([])
+export const RecommendationsList = ({ currentUser }) => {
+  const [myRecommendationFilms, setMyRecommendationFilms] = useState([])
 
-  const getMyWatchlist = () => {
-    getWatchlistFilmsByUserId(currentUser.id).then((myFilmsArray) => {
-      setMyWatchlistFilms(myFilmsArray)
+  const getMyRecommendations = () => {
+    getRecommendedFilmsByUserId(currentUser.id).then((myFilmsArray) => {
+      setMyRecommendationFilms(myFilmsArray)
     })
   }
 
   const handleRemove = (filmId) => {
-    removeWatchlistFilm(filmId).then(getMyWatchlist())
+    removeRecommendationFilm(filmId).then(getMyRecommendations())
   }
 
   useEffect(() => {
-    getMyWatchlist()
+    getMyRecommendations()
   }, [])
 
   return (
     <div className="watchlist-container">
-      <h2 style={{ textAlign: "center" }}>Films to Watch</h2>
-      {myWatchlistFilms.map((film) => (
+      <h2 style={{ textAlign: "center" }}>My Recommendations</h2>
+      {myRecommendationFilms.map((film) => (
         <Card
           key={film.id}
           className="container"
-          color="dark"
+          color="warning"
           inverse
           style={{ marginBottom: "10px" }}
         >
@@ -38,7 +38,7 @@ export const WatchList = ({ currentUser }) => {
             <Link to={`/film-details/${film.tmdbId}`}>
               <CardTitle tag="h4">{film.title}</CardTitle>
             </Link>
-            <p key={film.tmdbId}>
+            <p key={film.id}>
               Genre: {film.genres?.map((genre) => genre.name)}
             </p>
             <p>
@@ -46,6 +46,7 @@ export const WatchList = ({ currentUser }) => {
               {film.runtime === 0 ? "No recorded runtime" : film.runtime}{" "}
               minutes
             </p>
+            <p>TMDB Review Score: {film.vote_average}</p>
             <img
               className="film-image"
               //   key={film.id}
@@ -54,7 +55,7 @@ export const WatchList = ({ currentUser }) => {
                 height: "225px",
                 margin: "20px",
               }}
-              src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w500/${film.poster_path}`}
               alt="Film Poster"
             />
             <Button
