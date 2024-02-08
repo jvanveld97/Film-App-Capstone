@@ -13,3 +13,7 @@ export const createUser = async (user) => {
   })
   return await res.json()
 }
+export const getUserById = async (currentUser) => {
+  const res = await fetch(`http://localhost:8088/users?id=${currentUser}`)
+  return await res.json()
+}

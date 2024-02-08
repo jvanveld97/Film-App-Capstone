@@ -20,6 +20,7 @@ export const Register = (props) => {
           "film_user",
           JSON.stringify({
             id: createdUser.id,
+            username: createdUser.username,
           })
         )
 

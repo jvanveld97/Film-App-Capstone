@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import {
   addNewFilmToRecommendations,
   getFilmById,
@@ -8,14 +8,17 @@ import {
 import "./FilmDetails.css"
 import ReactPlayer from "react-player"
 import { handleWatchlist } from "./watchList/handleWatchlist"
+import { ReviewForm } from "./Reviews/ReviewForm"
 
 export const FilmDetails = ({ currentUser }) => {
   const [film, setFilm] = useState({})
   const [filmVideos, setFilmVideos] = useState([])
   const { filmId } = useParams()
-  const location = useLocation()
+  // const location = useLocation()
+  const [modal, setModal] = useState(false)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     getFilmById(filmId).then((selectedFilm) => {
       setFilm(selectedFilm)
     })
@@ -37,6 +40,10 @@ export const FilmDetails = ({ currentUser }) => {
     addNewFilmToRecommendations(newFilmRecommendationObj)
   }
 
+  const toggleModal = () => {
+    setModal(!modal)
+  }
+
   return (
     <section className="film-container">
       <img
@@ -53,6 +60,7 @@ export const FilmDetails = ({ currentUser }) => {
       <h1 className="film-title">{film.title}</h1>
       <div className="buttons-group">
         <button
+          style={{ margin: "5px" }}
           onClick={() => {
             handleWatchlist(film, currentUser, "details")
           }}
@@ -60,13 +68,22 @@ export const FilmDetails = ({ currentUser }) => {
           Add to Watchlist
         </button>
         <button
+          style={{ margin: "5px" }}
           onClick={() => {
             handleRecommendations(film, currentUser)
           }}
         >
           Add to Recommendations
         </button>
-        <button>Review</button>
+        <button style={{ margin: "5px" }} onClick={toggleModal}>
+          Review
+        </button>
+        <ReviewForm
+          currentUser={currentUser}
+          isOpen={modal}
+          toggleModal={toggleModal}
+          film={film}
+        />
       </div>
       <div className="film-genres">
         <h2>Genres: </h2>
