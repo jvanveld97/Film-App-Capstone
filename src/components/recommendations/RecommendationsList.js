@@ -4,24 +4,41 @@ import {
   removeRecommendationFilm,
 } from "../services/getFilms"
 import { Button, Card, CardBody, CardTitle } from "reactstrap"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { getReviewsByUserId } from "../services/getReviews"
 
 export const RecommendationsList = ({ currentUser }) => {
   const [myRecommendationFilms, setMyRecommendationFilms] = useState([])
+  const [myReviews, setMyReviews] = useState([])
+  const navigate = useNavigate()
 
-  const getMyRecommendations = () => {
+  const getMyRecommendationsAndReviews = () => {
     getRecommendedFilmsByUserId(currentUser.id).then((myFilmsArray) => {
       setMyRecommendationFilms(myFilmsArray)
     })
+    getReviewsByUserId(currentUser.id).then((myReviewsArray) => {
+      setMyReviews(myReviewsArray)
+    })
   }
-
   const handleRemove = (filmId) => {
-    removeRecommendationFilm(filmId).then(getMyRecommendations())
+    removeRecommendationFilm(filmId).then(getMyRecommendationsAndReviews())
   }
 
   useEffect(() => {
-    getMyRecommendations()
+    getMyRecommendationsAndReviews()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const hasReviewForRecommendation = (recommendation) => {
+    return (
+      recommendation.id &&
+      myReviews.some(
+        (review) =>
+          review.filmId === recommendation.id &&
+          review.userId === recommendation.userId
+      )
+    )
+  }
 
   return (
     <div className="watchlist-container">
@@ -35,11 +52,17 @@ export const RecommendationsList = ({ currentUser }) => {
           style={{ marginBottom: "10px" }}
         >
           <CardBody>
-            <Link to={`/film-details/${film.tmdbId}`}>
+            <Link to={`/film-details/${film.id}`}>
               <CardTitle tag="h4">{film.title}</CardTitle>
             </Link>
             <p key={film.id}>
-              Genre: {film.genres?.map((genre) => genre.name)}
+              Genre:{" "}
+              {film.genres?.map((genre, index) => (
+                <span key={genre.id}>
+                  {genre.name}
+                  {index !== film.genres.length - 1 && ", "}
+                </span>
+              ))}
             </p>
             <p>
               Runtime:{" "}
@@ -58,6 +81,22 @@ export const RecommendationsList = ({ currentUser }) => {
               src={`https://image.tmdb.org/t/p/w500/${film.poster_path}`}
               alt="Film Poster"
             />
+            {hasReviewForRecommendation(film) ? (
+              <Button
+                color="primary"
+                onClick={() => {
+                  const matchingReview = myReviews.find(
+                    (myReview) => myReview.filmId === film.id
+                  )
+
+                  if (matchingReview) {
+                    navigate(`/review-details/${matchingReview.id}`)
+                  }
+                }}
+              >
+                My Review
+              </Button>
+            ) : null}
             <Button
               color="danger"
               onClick={(event) => {

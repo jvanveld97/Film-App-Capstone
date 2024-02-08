@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { getReviewsById } from "../services/getReviews"
+import { useNavigate, useParams } from "react-router-dom"
+import { getReviewsById, removeReview } from "../services/getReviews"
 import "./ReviewDetails.css"
+import { EditReviewForm } from "./EditReviewForm"
 
 export const ReviewDetails = ({ currentUser }) => {
   const [review, setReview] = useState({})
   const { id } = useParams()
+  const navigate = useNavigate()
+
+  const [modal, setModal] = useState(false)
+
+  const toggleModal = () => {
+    setModal(!modal)
+  }
 
   useEffect(() => {
     getReviewsById(id).then((filmObj) => {
@@ -13,6 +21,12 @@ export const ReviewDetails = ({ currentUser }) => {
       setReview(reviewObj)
     })
   }, [id])
+
+  const handleDelete = (reviewId) => {
+    removeReview(reviewId).then(() => {
+      navigate(`/reviews`)
+    })
+  }
 
   return (
     <section className="review-container">
@@ -36,7 +50,34 @@ export const ReviewDetails = ({ currentUser }) => {
       </h3>
       <p>"{review.reviewBody}"</p>
       {/* if currentUser.username === review.userName then display button */}
-      <div>{currentUser.id === review.userId ? <button>Edit</button> : ""}</div>
+      <div>
+        {currentUser.id === review.userId ? (
+          <>
+            <button style={{ margin: "5px" }} onClick={toggleModal}>
+              Edit
+            </button>
+            <EditReviewForm
+              currentUser={currentUser}
+              isOpen={modal}
+              toggleModal={toggleModal}
+              review={review}
+              setReview={setReview}
+              id={id}
+            />
+            <button
+              style={{ margin: "5px" }}
+              value={review.id}
+              onClick={(event) => {
+                handleDelete(event.target.value)
+              }}
+            >
+              Delete
+            </button>
+          </>
+        ) : (
+          ""
+        )}
+      </div>
     </section>
   )
 }

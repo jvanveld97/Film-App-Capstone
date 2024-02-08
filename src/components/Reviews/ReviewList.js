@@ -5,6 +5,8 @@ import { Link } from "react-router-dom"
 
 export const ReviewList = ({ currentUser }) => {
   const [reviews, setReviews] = useState([])
+  const [showOnlyMyReview, setShowOnlyMyReview] = useState(false)
+  const [filteredReviews, setFilteredReviews] = useState([])
 
   useEffect(() => {
     getReviewsList().then((reviewsArray) => {
@@ -12,12 +14,36 @@ export const ReviewList = ({ currentUser }) => {
     })
   }, [])
 
+  useEffect(() => {
+    if (showOnlyMyReview) {
+      const myReviews = reviews.filter(
+        (review) => review.userId === currentUser.id
+      )
+      setFilteredReviews(myReviews)
+    } else {
+      setFilteredReviews(reviews)
+    }
+  }, [showOnlyMyReview, reviews])
+
   return (
     <div className="watchlist-container">
-      <button style={{ marginRight: "5px" }}>My Reviews</button>
-      <button>All Reviews</button>
+      <button
+        style={{ marginRight: "5px" }}
+        onClick={() => {
+          setShowOnlyMyReview(true)
+        }}
+      >
+        My Reviews
+      </button>
+      <button
+        onClick={() => {
+          setShowOnlyMyReview(false)
+        }}
+      >
+        All Reviews
+      </button>
       <h2 style={{ textAlign: "center" }}>Reviews</h2>
-      {reviews.map((review) => (
+      {filteredReviews.map((review) => (
         <Card
           key={review.id}
           className="container"

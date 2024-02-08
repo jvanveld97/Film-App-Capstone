@@ -1,42 +1,40 @@
-import { useEffect, useState } from "react"
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
-import { addNewReview } from "../services/getReviews"
+import { updateReview } from "../services/getReviews"
 
-export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
-  const [review, setReview] = useState({})
-  useEffect(() => {
-    let userObj = {
-      userId: currentUser.id,
-      userName: currentUser.username,
-      filmId: film.id,
-      filmPoster: film.poster_path,
-      filmTitle: film.title,
-      datePosted: new Date().toDateString(),
-    }
-    setReview(userObj)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [film])
-
-  const handleChange = (event, reviewProp) => {
-    const preReview = structuredClone(review)
-    preReview[reviewProp] = event.target.value
-    setReview(preReview)
+export const EditReviewForm = ({
+  currentUser,
+  review,
+  isOpen,
+  toggleModal,
+  setReview,
+}) => {
+  console.log("rendered")
+  const handleUpdate = (event) => {
+    const changedReviewObj = structuredClone(review)
+    updateReview(changedReviewObj)
   }
-  const handleReviewSubmit = (review) => {
-    const storageKey = `film_review_${currentUser.id}_${film.id}`
 
-    if (localStorage.getItem(storageKey)) {
-      alert("You have already submitted a review for this film.")
-      return
-    }
-    addNewReview(review)
-    localStorage.setItem(storageKey, "true")
+  const handleInputChange = (event) => {
+    const stateCopy = { ...review }
+    stateCopy[event.target.name] = event.target.value
+    setReview(stateCopy)
+  }
+
+  const handleRadioChangeYes = (event) => {
+    const stateCopy = { ...review }
+    stateCopy.isRecommended = true
+    setReview(stateCopy)
+  }
+  const handleRadioChangeNo = (event) => {
+    const stateCopy = { ...review }
+    stateCopy.isRecommended = false
+    setReview(stateCopy)
   }
 
   return (
     <Modal isOpen={isOpen} toggle={toggleModal}>
       <ModalHeader toggle={toggleModal}>
-        Write a Review for {film.title}
+        Update a Review for {review.filmTitle}
       </ModalHeader>
       <ModalBody>
         <form>
@@ -49,11 +47,11 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
             <div>
               <label>Review Title:</label>
               <input
+                style={{ margin: "5px", width: "350px" }}
                 type="text"
-                style={{ width: "350px", margin: "5px" }}
-                onChange={(event) => {
-                  handleChange(event, "reviewTitle")
-                }}
+                name="reviewTitle"
+                value={review.reviewTitle}
+                onChange={handleInputChange}
               ></input>
             </div>
           </fieldset>
@@ -61,12 +59,11 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
             <div>
               <label>Rating:</label>
               <input
-                type="number"
                 style={{ margin: "5px" }}
-                onChange={(event) => {
-                  handleChange(event, "userRating")
-                }}
-                placeholder="from a scale 1-10"
+                type="number"
+                name="userRating"
+                value={review.userRating}
+                onChange={handleInputChange}
               ></input>
             </div>
           </fieldset>
@@ -78,11 +75,8 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
                   style={{ margin: "5px" }}
                   type="radio"
                   id="yes"
-                  name="recommendation"
-                  value={true}
-                  onChange={(event) => {
-                    handleChange(event, "isRecommended")
-                  }}
+                  checked={review.isRecommended}
+                  onChange={handleRadioChangeYes}
                 />
                 <label htmlFor="yes">Yes</label>
               </div>
@@ -91,11 +85,8 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
                   style={{ margin: "5px" }}
                   type="radio"
                   id="no"
-                  name="recommendation"
-                  value={false}
-                  onChange={(event) => {
-                    handleChange(event, "isRecommended")
-                  }}
+                  checked={!review.isRecommended}
+                  onChange={handleRadioChangeNo}
                 />
                 <label htmlFor="no">No</label>
               </div>
@@ -106,9 +97,11 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
               <label>Body:</label>
               <textarea
                 type="text"
+                name="reviewBody"
+                value={review.reviewBody}
                 style={{
                   height: "150px",
-                  width: "100%",
+                  width: "400px",
                   wordWrap: "break-word",
                   overflowWrap: "break-word",
                   verticalAlign: "top",
@@ -116,9 +109,7 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
                   textAlign: "start",
                   margin: "5px",
                 }}
-                onChange={(event) => {
-                  handleChange(event, "reviewBody")
-                }}
+                onChange={handleInputChange}
               ></textarea>
             </div>
           </fieldset>
@@ -128,10 +119,10 @@ export const ReviewForm = ({ isOpen, toggleModal, film, currentUser }) => {
         <button
           color="primary"
           onClick={() => {
-            handleReviewSubmit(review)
+            handleUpdate(review)
           }}
         >
-          Submit Review
+          Update Review
         </button>{" "}
         <button color="secondary" onClick={toggleModal}>
           Cancel

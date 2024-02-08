@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { SearchBar } from "./SearchBar"
 import "./FilmList.css"
-import { Link, useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { handleWatchlist } from "./watchList/handleWatchlist"
 
 function Movie({ currentUser }) {
@@ -10,7 +10,7 @@ function Movie({ currentUser }) {
   const [filter, setFilter] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [searchResults, setSearchResults] = useState([])
-  const location = useLocation()
+  // const location = useLocation()
 
   const apiKey = `api_key=5fdee37d435b4908168dfca5173bb7b1`
 
@@ -38,11 +38,12 @@ function Movie({ currentUser }) {
     window.scrollTo(0, 0)
     getFilm()
     getGenre()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleSearchResults = (results) => {
-    setSearchResults(results)
-  }
+  // const handleSearchResults = (results) => {
+  //   setSearchResults(results)
+  // }
 
   let filteredFilms = filmList
 
@@ -98,6 +99,15 @@ function Movie({ currentUser }) {
                 <Link to={`film-details/${film.id}`}>
                   <label className="film-title">{film.title}</label>
                 </Link>
+                <label>Release Date {film.release_date}</label>
+                <label>Review Average {film.vote_average}</label>
+                <button
+                  onClick={() => {
+                    handleWatchlist(film, currentUser, "list")
+                  }}
+                >
+                  Add to Watch List
+                </button>
               </div>
             ))
           : filteredFilms?.map((film) => (
