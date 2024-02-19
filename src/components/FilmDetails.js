@@ -9,6 +9,7 @@ import "./FilmDetails.css"
 import ReactPlayer from "react-player"
 import { handleWatchlist } from "./watchList/handleWatchlist"
 import { ReviewForm } from "./Reviews/ReviewForm"
+import { Button } from "reactstrap"
 
 export const FilmDetails = ({ currentUser }) => {
   const [film, setFilm] = useState({})
@@ -59,25 +60,25 @@ export const FilmDetails = ({ currentUser }) => {
       />
       <h1 className="film-title">{film.title}</h1>
       <div className="buttons-group">
-        <button
+        <Button
           style={{ margin: "5px" }}
           onClick={() => {
             handleWatchlist(film, currentUser, "details")
           }}
         >
           Add to Watchlist
-        </button>
-        <button
+        </Button>
+        <Button
           style={{ margin: "5px" }}
           onClick={() => {
             handleRecommendations(film, currentUser)
           }}
         >
           Add to Recommendations
-        </button>
-        <button style={{ margin: "5px" }} onClick={toggleModal}>
+        </Button>
+        <Button style={{ margin: "5px" }} onClick={toggleModal}>
           Review
-        </button>
+        </Button>
         <ReviewForm
           currentUser={currentUser}
           isOpen={modal}
@@ -96,10 +97,21 @@ export const FilmDetails = ({ currentUser }) => {
       <h2>Score: {film.vote_average}</h2>
       <h2>Release Date: {film.release_date}</h2>
       <h2>Runtime: {film.runtime} minutes</h2>
-      <h2>Budget: {film.budget === 0 ? "No recorded budget" : film.budget}</h2>
       <h2>
-        Box Office:{" "}
-        {film.revenue === 0 ? "No recorded box office" : film.revenue}
+        {film &&
+        film.budget !== undefined &&
+        film.budget !== null &&
+        film.budget !== 0
+          ? `Budget: $${film.budget.toLocaleString()}`
+          : "No recorded budget"}
+      </h2>
+      <h2>
+        {film &&
+        film.revenue !== undefined &&
+        film.revenue !== null &&
+        film.revenue !== 0
+          ? `Box Office: $${film.revenue.toLocaleString()}`
+          : "No recorded box office"}
       </h2>
       <h2>
         Synopsis:

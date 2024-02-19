@@ -6,3 +6,30 @@
     text-align: center; 
     padding: 20px; 
   }
+  .filter-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+  }
+
+  .film-info-container {
+    display: block;
+    width: 250px;
+    height: 265px;
+    padding: 5px;
+}
+.film-image-container {
+    display: block;
+    width: 250px;
+    justify-content: center;
+}
+
+.reviewlist-card-body {
+    display: flex;
+    justify-content: space-between;
+}
+.reviewlist-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
