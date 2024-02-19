@@ -1,0 +1,16 @@
+.film-info-container {
+    display: block;
+    width: 250px;
+    height: 265px;
+    padding: 5px;
+}
+.film-image-container {
+    display: block;
+    width: 250px;
+    justify-content: center;
+}
+
+.recommendations-card-body {
+    display: flex;
+    justify-content: space-between;
+}

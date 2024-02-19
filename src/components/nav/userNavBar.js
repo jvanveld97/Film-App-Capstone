@@ -1,34 +1,35 @@
-import { Link, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
+import { NavItem, Navbar } from "reactstrap"
 import "./userNavBar.css"
 
 export const NavBar = () => {
   const navigate = useNavigate()
 
   return (
-    <ul className="navbar">
-      <li className="navbar-item">
-        <Link className="navbar-link" to="/">
+    <Navbar color="dark" className="navbar">
+      <NavItem className="navbar-item">
+        <NavLink className="navbar-link" to="/">
           Home
-        </Link>
-      </li>
-      <li className="navbar-item">
-        <Link className="navbar-link" to="/my-watchlist">
+        </NavLink>
+      </NavItem>
+      <NavItem className="navbar-item">
+        <NavLink className="navbar-link" to="/my-watchlist">
           My Watchlist
-        </Link>
-      </li>
-      <li className="navbar-item">
-        <Link className="navbar-link" to="/my-recommendations">
+        </NavLink>
+      </NavItem>
+      <NavItem className="navbar-item">
+        <NavLink className="navbar-link" to="/my-recommendations">
           Recommendations
-        </Link>
-      </li>
-      <li className="navbar-item">
-        <Link className="navbar-link" to="/reviews">
+        </NavLink>
+      </NavItem>
+      <NavItem className="navbar-item">
+        <NavLink className="navbar-link" to="/reviews">
           Reviews
-        </Link>
-      </li>
+        </NavLink>
+      </NavItem>
       {localStorage.getItem("film_user") ? (
-        <li className="navbar-item navbar-logout">
-          <Link
+        <NavItem className="navbar-item navbar-logout">
+          <NavLink
             className="navbar-link"
             to=""
             onClick={() => {
@@ -37,11 +38,11 @@ export const NavBar = () => {
             }}
           >
             Logout
-          </Link>
-        </li>
+          </NavLink>
+        </NavItem>
       ) : (
         ""
       )}
-    </ul>
+    </Navbar>
   )
 }

@@ -1,0 +1,21 @@
+.film-info-container {
+    display: block;
+    width: 250px;
+    height: 265px;
+    padding: 5px;
+}
+.film-image-container {
+    display: block;
+    width: 250px;
+    justify-content: center;
+}
+
+.watchlist-card-body {
+    display: flex;
+    justify-content: space-between;
+}
+.watchlist-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
